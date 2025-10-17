@@ -51,6 +51,10 @@ class Ball:
     def draw(self):
         pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.r)
 
+    def is_clicked(self, pos):
+        mx, my = pos
+        return math.hypot(self.x - mx, self.y - my) <= self.r
+
 
 def handle_obstacle_collision(ball, obstacle, damping=0.9):
     # najbliższy punkt na prostokącie do środka kulki
@@ -131,6 +135,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            for b in balls:
+                if b.is_clicked(pos):
+                    b.vx *= -1
+                    b.vy *= -1
+
 
     screen.fill((30, 30, 30))
 
