@@ -6,6 +6,7 @@ width, height = 800, 600
 num_balls = 3
 air_res = 0.999
 damping = 0.98
+g = -10
 
 pygame.init()
 screen = pygame.display.set_mode((width, height))
@@ -21,12 +22,14 @@ class Ball:
         self.vx = random.uniform(1, 5)
         self.vy = random.uniform(1, 5)
 
-    def move(self):
+    def move(self, dt, g):
+        self.vy -= g * dt
+
         self.vx *= air_res
         self.vy *= air_res
 
-        self.x += self.vx
-        self.y += self.vy
+        self.x += self.vx * dt
+        self.y += self.vy * dt
 
         # odbijanie:
         # lewa krawedz za bardzo w lewo
@@ -151,8 +154,9 @@ while running:
         pygame.draw.rect(screen, (150, 150, 150), obs)
 
     # ruch piłeczek
+    dt = clock.get_time() / 100.0
     for b in balls:
-        b.move()
+        b.move(dt,g)
 
         # odbicia od przeszkód
         for obs in obstacles:
